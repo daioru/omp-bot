@@ -178,7 +178,7 @@ func (c *Router) handleMessage(msg *tgbotapi.Message) {
 
 	switch commandPath.Domain {
 	case "demo":
-		c.demoCommander.HandleCommand(msg, commandPath)
+		break
 	case "user":
 		break
 	case "access":
@@ -224,7 +224,7 @@ func (c *Router) handleMessage(msg *tgbotapi.Message) {
 	case "cinema":
 		break
 	case "logistic":
-		break
+		c.demoCommander.HandleCommand(msg, commandPath)
 	case "product":
 		break
 	case "education":

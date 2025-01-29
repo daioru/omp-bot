@@ -37,10 +37,16 @@ func (c *DemoSubdomainCommander) HandleCommand(msg *tgbotapi.Message, commandPat
 	switch commandPath.CommandName {
 	case "help":
 		c.Help(msg)
-	case "list":
-		c.List(msg)
 	case "get":
 		c.Get(msg)
+	case "list":
+		c.List(msg)
+	case "delete":
+		c.Delete(msg)
+	case "new":
+		c.New(msg)
+	case "edit":
+		c.Edit(msg)
 	default:
 		c.Default(msg)
 	}

@@ -30,7 +30,7 @@ func NewDemoCommander(
 
 func (c *DemoCommander) HandleCallback(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
 	switch callbackPath.Subdomain {
-	case "subdomain":
+	case "package":
 		c.subdomainCommander.HandleCallback(callback, callbackPath)
 	default:
 		log.Printf("DemoCommander.HandleCallback: unknown subdomain - %s", callbackPath.Subdomain)
@@ -39,7 +39,7 @@ func (c *DemoCommander) HandleCallback(callback *tgbotapi.CallbackQuery, callbac
 
 func (c *DemoCommander) HandleCommand(msg *tgbotapi.Message, commandPath path.CommandPath) {
 	switch commandPath.Subdomain {
-	case "subdomain":
+	case "package":
 		c.subdomainCommander.HandleCommand(msg, commandPath)
 	default:
 		log.Printf("DemoCommander.HandleCommand: unknown subdomain - %s", commandPath.Subdomain)
