@@ -1,4 +1,4 @@
-package subdomain
+package box
 
 type Service struct{}
 
@@ -6,17 +6,17 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) List() []Subdomain {
+func (s *Service) List() []Box {
 	return allEntities
 }
 
-func (s *Service) Get(idx int) (*Subdomain, error) {
+func (s *Service) Get(idx int) (*Box, error) {
 	return &allEntities[idx], nil
 }
 
-func (s *Service) Edit(idx int, title string) (*Subdomain, error) {
+func (s *Service) Edit(idx int, title string) (*Box, error) {
 	// Поменять на правильную логику
-	allEntities[idx] = Subdomain{
+	allEntities[idx] = Box{
 		Title: title,
 	}
 
@@ -26,14 +26,14 @@ func (s *Service) Edit(idx int, title string) (*Subdomain, error) {
 func (s *Service) Delete(idx int) error {
 	// Подумать об обработке ошибок
 	allEntities[idx] = allEntities[len(allEntities)-1]
-	allEntities[len(allEntities)-1] = Subdomain{}
+	allEntities[len(allEntities)-1] = Box{}
 	allEntities = allEntities[:len(allEntities)-1]
 
 	return nil
 }
 
-func (s *Service) New(args string) (*Subdomain, int, error) {
-	allEntities = append(allEntities, Subdomain{
+func (s *Service) New(args string) (*Box, int, error) {
+	allEntities = append(allEntities, Box{
 		Title: args,
 	})
 

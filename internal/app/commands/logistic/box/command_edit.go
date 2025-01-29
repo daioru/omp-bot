@@ -1,4 +1,4 @@
-package subdomain
+package box
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func (c *DemoSubdomainCommander) Edit(inputMessage *tgbotapi.Message) {
+func (c *BoxCommander) Edit(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
 	argsParts := strings.SplitN(args, " ", 2)
 	if len(argsParts) < 2 {
@@ -40,6 +40,6 @@ func (c *DemoSubdomainCommander) Edit(inputMessage *tgbotapi.Message) {
 
 	_, err = c.bot.Send(msg)
 	if err != nil {
-		log.Printf("DemoSubdomainCommander.Edit: error sending reply message to chat - %v", err)
+		log.Printf("BoxCommander.Edit: error sending reply message to chat - %v", err)
 	}
 }

@@ -1,4 +1,4 @@
-package subdomain
+package box
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/ozonmp/omp-bot/internal/app/path"
 )
 
-func (c *DemoSubdomainCommander) List(inputMessage *tgbotapi.Message) {
+func (c *BoxCommander) List(inputMessage *tgbotapi.Message) {
 	outputMsgText := "Here all the products: \n\n"
 
 	products := c.subdomainService.List()
@@ -38,6 +38,6 @@ func (c *DemoSubdomainCommander) List(inputMessage *tgbotapi.Message) {
 
 	_, err := c.bot.Send(msg)
 	if err != nil {
-		log.Printf("DemoSubdomainCommander.List: error sending reply message to chat - %v", err)
+		log.Printf("BoxCommander.List: error sending reply message to chat - %v", err)
 	}
 }

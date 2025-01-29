@@ -1,4 +1,4 @@
-package subdomain
+package box
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func (c *DemoSubdomainCommander) Delete(inputMessage *tgbotapi.Message) {
+func (c *BoxCommander) Delete(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
 
 	idx, err := strconv.Atoi(args)
@@ -30,6 +30,6 @@ func (c *DemoSubdomainCommander) Delete(inputMessage *tgbotapi.Message) {
 
 	_, err = c.bot.Send(msg)
 	if err != nil {
-		log.Printf("DemoSubdomainCommander.Delete: error sending reply message to chat - %v", err)
+		log.Printf("BoxCommander.Delete: error sending reply message to chat - %v", err)
 	}
 }

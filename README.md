@@ -16,7 +16,7 @@ make run
 
 Мой domain - logistics
 
-Мой subdomain - package
+Мой subdomain - box
 
 TODO:
 
