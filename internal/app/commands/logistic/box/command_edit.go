@@ -3,60 +3,31 @@ package box
 import (
 	"fmt"
 	"log"
-	"strconv"
-	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func (c *DummyBoxCommander) Edit(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
-	argsParts := strings.SplitN(args, " ", 4)
-	if len(argsParts) < 4 {
-		log.Println("Invalid number of arguments", args)
-		return
-	}
 
-	editBoxID, err := strconv.Atoi(argsParts[0])
+	editBox, err := c.boxModel.NewBoxFromArgs(args)
 	if err != nil {
-		log.Println("wrong id", args)
+		log.Printf("fail to create box with args %v: %v", args, err)
 		return
 	}
-
-	weight, err := strconv.ParseFloat(argsParts[1], 32)
-	if err != nil {
-		log.Println("wrong weight", args)
-		return
-	}
-
-	volume, err := strconv.ParseFloat(argsParts[2], 32)
-	if err != nil {
-		log.Println("wrong volume", args)
-		return
-	}
-
-	isFragile, err := strconv.ParseBool(argsParts[3])
-	if err != nil {
-		log.Println("wrong isFragile", args)
-		return
-	}
-
-	//Сгенерировать объект Box из агрументов
-
-	editBox := c.boxModel.NewBox(editBoxID, float32(weight), float32(volume), isFragile)
 
 	// Тоже создаём объет по аргументам команды
-	err = c.boxService.Update(editBoxID, *editBox)
+	err = c.boxService.Update(editBox.ID, *editBox)
 	if err != nil {
-		log.Printf("fail to edit box with idx %d: %v", editBoxID, err)
+		log.Printf("fail to edit box with idx %d: %v", editBox.ID, err)
 		return
 	}
 
 	msg := tgbotapi.NewMessage(
 		inputMessage.Chat.ID,
 		fmt.Sprintf(
-			"Box with id: %d edited successfully",
-			editBoxID,
+			"Box with id %d edited successfully",
+			editBox.ID,
 		),
 	)
 

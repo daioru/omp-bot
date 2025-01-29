@@ -13,6 +13,11 @@ func (c *DummyBoxCommander) List(inputMessage *tgbotapi.Message) {
 
 	// Добавить логику переключения страниц
 	products, err := c.boxService.List(0, 5)
+	if err != nil {
+		log.Printf("Failed to fetch boxes: %v", err)
+		return
+	}
+
 	for _, p := range products {
 		outputMsgText += p.String()
 		outputMsgText += "\n"
