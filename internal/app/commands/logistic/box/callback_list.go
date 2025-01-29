@@ -10,10 +10,11 @@ import (
 )
 
 type CallbackListData struct {
-	Offset int `json:"offset"`
+	Cursor int `json:"cursor"`
+	Limit  int `json:"limit"`
 }
 
-func (c *BoxCommander) CallbackList(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
+func (c *DummyBoxCommander) CallbackList(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
 	parsedData := CallbackListData{}
 	err := json.Unmarshal([]byte(callbackPath.CallbackData), &parsedData)
 	if err != nil {

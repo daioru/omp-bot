@@ -24,7 +24,7 @@ func NewLogisticCommander(
 	return &LogisticCommander{
 		bot: bot,
 		// boxCommander
-		boxCommander: box.NewBoxCommander(bot),
+		boxCommander: box.NewDummyBoxCommander(bot),
 	}
 }
 

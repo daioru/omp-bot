@@ -3,25 +3,49 @@ package box
 import (
 	"fmt"
 	"log"
-	"unicode/utf8"
+	"strconv"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func (c *BoxCommander) New(inputMessage *tgbotapi.Message) {
+func (c *DummyBoxCommander) New(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
-
-	if args == "" {
-		log.Println("argument list cannot be empty", args)
+	argsParts := strings.SplitN(args, " ", 4)
+	if len(argsParts) < 4 {
+		log.Println("Invalid number of arguments", args)
 		return
 	}
 
-	if utf8.RuneCountInString(args) > 100 {
-		log.Println("title field cannot be over 100 characters long")
+	newBoxID, err := strconv.Atoi(argsParts[0])
+	if err != nil {
+		log.Println("wrong id", args)
 		return
 	}
 
-	newProduct, newProductId, err := c.subdomainService.New(args)
+	weight, err := strconv.ParseFloat(argsParts[1], 32)
+	if err != nil {
+		log.Println("wrong weight", args)
+		return
+	}
+
+	volume, err := strconv.ParseFloat(argsParts[2], 32)
+	if err != nil {
+		log.Println("wrong volume", args)
+		return
+	}
+
+	isFragile, err := strconv.ParseBool(argsParts[3])
+	if err != nil {
+		log.Println("wrong isFragile", args)
+		return
+	}
+
+	//Сгенерировать объект Box из агрументов
+
+	newBox := c.boxModel.NewBox(newBoxID, float32(weight), float32(volume), isFragile)
+
+	newProductID, err := c.boxService.Create(*newBox)
 	if err != nil {
 		log.Printf("failed to create product with args: %v", args)
 		return
@@ -30,9 +54,8 @@ func (c *BoxCommander) New(inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(
 		inputMessage.Chat.ID,
 		fmt.Sprintf(
-			"Product with title: %s created successfully. It's id: %d",
-			newProduct.Title,
-			newProductId,
+			"Box with id %d sussessfully created",
+			newProductID,
 		),
 	)
 

@@ -1,41 +1,66 @@
 package box
 
-type Service struct{}
+import "fmt"
 
-func NewService() *Service {
-	return &Service{}
+type BoxService interface {
+	Describe(boxID int) (Box, error)
+	List(cursor int, limit int) ([]Box, error)
+	Create(Box) (int, error)
+	Update(boxID int, box Box) error
+	Remove(boxID int) (bool, error)
 }
 
-func (s *Service) List() []Box {
-	return allEntities
+type DummyBoxService struct {
+	boxModel DummyBoxModel
 }
 
-func (s *Service) Get(idx int) (*Box, error) {
-	return &allEntities[idx], nil
+func NewDummyBoxService() *DummyBoxService {
+	return &DummyBoxService{boxModel: *NewDummyBoxModel()}
 }
 
-func (s *Service) Edit(idx int, title string) (*Box, error) {
-	// Поменять на правильную логику
-	allEntities[idx] = Box{
-		Title: title,
+func (s *DummyBoxService) List(cursor int, limit int) ([]Box, error) {
+	boxSlice := []Box{}
+
+	for key := range s.boxModel.Entities {
+		boxSlice = append(boxSlice, s.boxModel.Entities[key])
 	}
 
-	return &allEntities[idx], nil
+	return boxSlice, nil
 }
 
-func (s *Service) Delete(idx int) error {
-	// Подумать об обработке ошибок
-	allEntities[idx] = allEntities[len(allEntities)-1]
-	allEntities[len(allEntities)-1] = Box{}
-	allEntities = allEntities[:len(allEntities)-1]
+func (s *DummyBoxService) Describe(boxID int) (Box, error) {
+	box, ok := s.boxModel.Entities[boxID]
+	if !ok {
+		return Box{}, fmt.Errorf("Box with id %d doesn't exist", boxID)
+	}
+	return box, nil
+}
 
+func (s *DummyBoxService) Update(boxID int, box Box) error {
+	_, ok := s.boxModel.Entities[boxID]
+	if !ok {
+		return fmt.Errorf("Box with id %d doesn't exist", boxID)
+	}
+
+	s.boxModel.Entities[boxID] = box
 	return nil
 }
 
-func (s *Service) New(args string) (*Box, int, error) {
-	allEntities = append(allEntities, Box{
-		Title: args,
-	})
+func (s *DummyBoxService) Remove(boxID int) (bool, error) {
+	_, ok := s.boxModel.Entities[boxID]
+	if !ok {
+		return false, nil
+	}
 
-	return &allEntities[len(allEntities)-1], len(allEntities) - 1, nil
+	delete(s.boxModel.Entities, boxID)
+	return true, nil
+}
+
+func (s *DummyBoxService) Create(box Box) (int, error) {
+	_, ok := s.boxModel.Entities[box.ID]
+	if ok {
+		return 0, fmt.Errorf("Box with id %d already exists", box.ID)
+	}
+	s.boxModel.Entities[box.ID] = box
+	return box.ID, nil
 }

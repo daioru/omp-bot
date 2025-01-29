@@ -6,7 +6,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func (c *BoxCommander) Help(inputMessage *tgbotapi.Message) {
+func (c *DummyBoxCommander) Help(inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID,
 		"/help__logistic__box - print list of commands\n"+
 			"/get__logistic__box - get a entity\n"+

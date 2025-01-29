@@ -8,33 +8,34 @@ import (
 	"github.com/ozonmp/omp-bot/internal/service/logistic/box"
 )
 
-// type BoxCommander interface {
-// 	Help(inputMsg *tgbotapi.Message)
-// 	Get(inputMsg *tgbotapi.Message)
-// 	List(inputMsg *tgbotapi.Message)
-// 	Delete(inputMsg *tgbotapi.Message)
+type BoxCommander interface {
+	Help(inputMsg *tgbotapi.Message)
+	Get(inputMsg *tgbotapi.Message)
+	List(inputMsg *tgbotapi.Message)
+	Delete(inputMsg *tgbotapi.Message)
 
-// 	New(inputMsg *tgbotapi.Message)  // return error not implemented
-// 	Edit(inputMsg *tgbotapi.Message) // return error not implemented
-// }
-
-type BoxCommander struct {
-	bot              *tgbotapi.BotAPI
-	subdomainService *box.Service
+	New(inputMsg *tgbotapi.Message)  // return error not implemented
+	Edit(inputMsg *tgbotapi.Message) // return error not implemented
 }
 
-func NewBoxCommander(
-	bot *tgbotapi.BotAPI,
-) *BoxCommander {
-	subdomainService := box.NewService()
+type DummyBoxCommander struct {
+	bot        *tgbotapi.BotAPI
+	boxService *box.DummyBoxService
+	boxModel   *box.DummyBoxModel
+}
 
-	return &BoxCommander{
-		bot:              bot,
-		subdomainService: subdomainService,
+func NewDummyBoxCommander(
+	bot *tgbotapi.BotAPI,
+) *DummyBoxCommander {
+	boxService := box.NewDummyBoxService()
+
+	return &DummyBoxCommander{
+		bot:        bot,
+		boxService: boxService,
 	}
 }
 
-func (c *BoxCommander) HandleCallback(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
+func (c *DummyBoxCommander) HandleCallback(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
 	switch callbackPath.CallbackName {
 	case "list":
 		c.CallbackList(callback, callbackPath)
@@ -43,7 +44,7 @@ func (c *BoxCommander) HandleCallback(callback *tgbotapi.CallbackQuery, callback
 	}
 }
 
-func (c *BoxCommander) HandleCommand(msg *tgbotapi.Message, commandPath path.CommandPath) {
+func (c *DummyBoxCommander) HandleCommand(msg *tgbotapi.Message, commandPath path.CommandPath) {
 	switch commandPath.CommandName {
 	case "help":
 		c.Help(msg)

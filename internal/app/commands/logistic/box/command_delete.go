@@ -8,7 +8,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func (c *BoxCommander) Delete(inputMessage *tgbotapi.Message) {
+func (c *DummyBoxCommander) Delete(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
 
 	idx, err := strconv.Atoi(args)
@@ -17,16 +17,24 @@ func (c *BoxCommander) Delete(inputMessage *tgbotapi.Message) {
 		return
 	}
 
-	err = c.subdomainService.Delete(idx)
+	ok, err := c.boxService.Remove(idx)
 	if err != nil {
 		log.Printf("fail to delete product with idx %d: %v", idx, err)
 		return
 	}
 
-	msg := tgbotapi.NewMessage(
-		inputMessage.Chat.ID,
-		fmt.Sprintf("product with idx %d deleted successfully", idx),
-	)
+	var msg tgbotapi.MessageConfig
+	if ok {
+		msg = tgbotapi.NewMessage(
+			inputMessage.Chat.ID,
+			fmt.Sprintf("product with idx %d deleted successfully", idx),
+		)
+	} else {
+		msg = tgbotapi.NewMessage(
+			inputMessage.Chat.ID,
+			fmt.Sprintf("product with idx %d not deleted", idx),
+		)
+	}
 
 	_, err = c.bot.Send(msg)
 	if err != nil {
