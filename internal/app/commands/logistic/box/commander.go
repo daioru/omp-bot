@@ -51,7 +51,7 @@ func (c *DummyBoxCommander) HandleCommand(msg *tgbotapi.Message, commandPath pat
 	case "get":
 		c.Get(msg)
 	case "list":
-		c.List(msg)
+		c.List(msg, 0, 5)
 	case "delete":
 		c.Delete(msg)
 	case "new":

@@ -2,19 +2,20 @@ package box
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/ozonmp/omp-bot/internal/app/path"
 )
 
-func (c *DummyBoxCommander) List(inputMessage *tgbotapi.Message) {
-	outputMsgText := "Here all the products: \n\n"
+func (c *DummyBoxCommander) List(inputMessage *tgbotapi.Message, cursor int, offset int) {
+	outputMsgText := fmt.Sprintf("Here all the products for page %d: \n\n", cursor/5 + 1)
 
 	// Добавить логику переключения страниц
-	products, err := c.boxService.List(0, 5)
+	products, err := c.boxService.List(cursor, offset)
 	if err != nil {
-		log.Printf("Failed to fetch boxes: %v", err)
+		log.Printf("Failed to fetch boxes with cursor %d, offset %d: %v", cursor, offset, err)
 		return
 	}
 
@@ -26,7 +27,7 @@ func (c *DummyBoxCommander) List(inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, outputMsgText)
 
 	serializedData, _ := json.Marshal(CallbackListData{
-		Cursor: 0,
+		Cursor: cursor + 5,
 		Limit:  5,
 	})
 

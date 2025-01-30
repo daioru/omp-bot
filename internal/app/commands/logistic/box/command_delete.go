@@ -19,7 +19,7 @@ func (c *DummyBoxCommander) Delete(inputMessage *tgbotapi.Message) {
 
 	ok, err := c.boxService.Remove(idx)
 	if err != nil {
-		log.Printf("fail to delete product with idx %d: %v", idx, err)
+		log.Printf("fail to delete bix with idx %d: %v", idx, err)
 		return
 	}
 
@@ -27,12 +27,12 @@ func (c *DummyBoxCommander) Delete(inputMessage *tgbotapi.Message) {
 	if ok {
 		msg = tgbotapi.NewMessage(
 			inputMessage.Chat.ID,
-			fmt.Sprintf("product with idx %d deleted successfully", idx),
+			fmt.Sprintf("box with idx %d deleted successfully", idx),
 		)
 	} else {
 		msg = tgbotapi.NewMessage(
 			inputMessage.Chat.ID,
-			fmt.Sprintf("product with idx %d not deleted", idx),
+			fmt.Sprintf("box with idx %d not deleted", idx),
 		)
 	}
 

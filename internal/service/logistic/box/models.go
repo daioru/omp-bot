@@ -11,12 +11,7 @@ var Entities map[int]Box
 
 type DummyBoxModel struct {
 	Entities map[int]Box
-	Slice    []BoxStruct
-}
-
-type BoxStruct struct {
-	ID  int
-	Box Box
+	IDs      []int
 }
 
 type Box struct {
@@ -73,5 +68,8 @@ func NewBox(id int, weight, volume float32, isFragile bool) *Box {
 }
 
 func NewDummyBoxModel() *DummyBoxModel {
-	return &DummyBoxModel{Entities: make(map[int]Box)}
+	return &DummyBoxModel{
+		Entities: make(map[int]Box),
+		IDs:      []int{},
+	}
 }
